@@ -1,8 +1,10 @@
 #include <gtest/gtest.h>
 #include "ringbuffer.h"
 
-
-TEST(InitBuffer,init)
+/**************************************************************
+ * Test cases for init_buffer()
+ * ***********************************************************/		
+TEST(initBuffer,init)
 {
 	struct buffer_type test; 
 	int buffer_size = 10;
@@ -15,8 +17,11 @@ TEST(InitBuffer,init)
 	EXPECT_EQ(test.beginning, buffer);
 	EXPECT_EQ(test.end, buffer + buffer_size -1);
 }
-///////////////////////////////////////////////////////////////
-TEST(EmptyBuffer,empty)
+
+/**************************************************************
+ * Test cases for empty_buffer()
+ * ***********************************************************/														
+TEST(emptyBuffer,empty)
 {
 	struct buffer_type test; 
 	int buffer_size = 10;
@@ -39,8 +44,10 @@ TEST(EmptyBuffer,empty)
 	EXPECT_EQ(test.end, buffer + buffer_size -1);
 }
 
-/////////////////////////////////////////////////////////////
-TEST(GetBufferState,emptyBuffer1)
+/**************************************************************
+ * Test cases for get_buffer_state()
+ * ***********************************************************/		
+TEST(getBufferState,emptyBuffer1)
 {
 	int buffer_size = 10;
 	struct buffer_type test; 
@@ -60,7 +67,7 @@ TEST(GetBufferState,emptyBuffer1)
 	EXPECT_EQ(test.tail, buffer);	
 }
 
-TEST(GetBufferState,emptyBuffer2)
+TEST(getBufferState,emptyBuffer2)
 {
 	int buffer_size = 10;
 	struct buffer_type test; 
@@ -80,7 +87,7 @@ TEST(GetBufferState,emptyBuffer2)
 	EXPECT_EQ(test.tail, buffer + 5);	
 }
 
-TEST(GetBufferState,oKbuffer)
+TEST(getBufferState,oKbuffer)
 {
 	int buffer_size = 10;
 	struct buffer_type test; 
@@ -100,7 +107,7 @@ TEST(GetBufferState,oKbuffer)
 	EXPECT_EQ(test.tail, buffer + 3);	
 }
 
-TEST(GetBufferState,bufferFull)
+TEST(getBufferState,bufferFull)
 {
 	int buffer_size = 10;
 	struct buffer_type test; 
@@ -119,7 +126,7 @@ TEST(GetBufferState,bufferFull)
 	EXPECT_EQ(test.head, buffer + 9);
 	EXPECT_EQ(test.tail, buffer);	
 }
-TEST(GetBufferState,bufferFull2)
+TEST(getBufferState,bufferFull2)
 {
 	int buffer_size = 10;
 	struct buffer_type test; 
@@ -139,7 +146,7 @@ TEST(GetBufferState,bufferFull2)
 	EXPECT_EQ(test.tail, buffer + 4);	
 }
 
-TEST(GetBufferState,Error1)
+TEST(getBufferState,Error1)
 {
 	int buffer_size = 10;
 	struct buffer_type test; 
@@ -158,7 +165,7 @@ TEST(GetBufferState,Error1)
 	EXPECT_EQ(err, POINTER_ERROR);
 }
 
-TEST(GetBufferState,Error2)
+TEST(getBufferState,Error2)
 {
 	int buffer_size = 10;
 	struct buffer_type test; 
@@ -177,8 +184,10 @@ TEST(GetBufferState,Error2)
 	EXPECT_EQ(err, POINTER_ERROR);
 }
 
-///////////////////////////////////////////////////////////////
-TEST(AddCharToBuffer,addToEmpty)
+/**************************************************************
+ * Test cases for add_char_to_buffer()
+ * ***********************************************************/		
+TEST(addCharToBuffer,addToEmpty)
 {
 	int buffer_size = 10;
 	struct buffer_type test; 
@@ -198,7 +207,7 @@ TEST(AddCharToBuffer,addToEmpty)
 	EXPECT_EQ(test.head, buffer + 1);
 }
 
-TEST(AddCharToBuffer,addToFull)
+TEST(addCharToBuffer,addToFull)
 {
 	int buffer_size = 10;
 	struct buffer_type test; 
@@ -219,7 +228,7 @@ TEST(AddCharToBuffer,addToFull)
 	EXPECT_EQ(test.tail, buffer);
 }
 
-TEST(AddCharToBuffer,addToPointerError)
+TEST(addCharToBuffer,addToPointerError)
 {
 	int buffer_size = 10;
 	struct buffer_type test; 
@@ -238,7 +247,7 @@ TEST(AddCharToBuffer,addToPointerError)
 	EXPECT_EQ(err, POINTER_ERROR);
 }
 
-TEST(AddCharToBuffer,addToOK1)
+TEST(addCharToBuffer,addToOK1)
 {
 	int buffer_size = 10;
 	struct buffer_type test; 
@@ -259,7 +268,7 @@ TEST(AddCharToBuffer,addToOK1)
 	EXPECT_EQ(test.tail, buffer);
 }
 
-TEST(AddCharToBuffer,addToOKThenFull)
+TEST(addCharToBuffer,addToOKThenFull)
 {
 	int buffer_size = 10;
 	struct buffer_type test; 
@@ -280,11 +289,10 @@ TEST(AddCharToBuffer,addToOKThenFull)
 	EXPECT_EQ(test.tail, buffer + 4);
 }
 
-
-
-//////////////////////////////////////////////////////////////
-
-/* TEST(GetCharFromBuffer,getFromEmpty)
+/**************************************************************
+ * Test cases for get_char_from_buffer()
+ * ***********************************************************/		
+TEST(getCharFromBuffer,getFromEmpty)
 {
 	int buffer_size = 10;
 	struct buffer_type test; 
@@ -298,13 +306,13 @@ TEST(AddCharToBuffer,addToOKThenFull)
 	test.tail = buffer;
 	read = get_char_from_buffer(&test, &err);
 	
-    EXPECT_EQ(read, -1);
+    EXPECT_EQ(read,(unsigned char)-1);
 	EXPECT_EQ(err,EMPTY_BUFFER);
 	EXPECT_EQ(test.head, buffer);
 	EXPECT_EQ(test.tail, buffer);	
-} */
+}
 
-TEST(GetCharFromBuffer,getFromOK)
+TEST(getCharFromBuffer,getFromOK)
 {
 	int buffer_size = 10;
 	struct buffer_type test; 
@@ -329,7 +337,7 @@ TEST(GetCharFromBuffer,getFromOK)
 	EXPECT_EQ(test.tail, buffer + 3);	
 }
 
-TEST(GetCharFromBuffer,getFromFull)
+TEST(getCharFromBuffer,getFromFull)
 {
 	int buffer_size = 10;
 	struct buffer_type test; 
@@ -355,7 +363,7 @@ TEST(GetCharFromBuffer,getFromFull)
 	EXPECT_EQ(test.tail, buffer + 1);	
 }
 
-/* TEST(GetCharFromBuffer,getFromError)
+TEST(getCharFromBuffer,getFromError)
 {
 	int buffer_size = 10;
 	struct buffer_type test; 
@@ -371,11 +379,13 @@ TEST(GetCharFromBuffer,getFromFull)
 
 	read = get_char_from_buffer(&test, &err);
 	
-    EXPECT_EQ(read, -1);
+    EXPECT_EQ(read,(unsigned char)-1);
 	EXPECT_EQ(err, POINTER_ERROR);
-} */
+} 
 
-
+/**************************************************************
+ * Test cases for print_buffer()
+ * ***********************************************************/		
 TEST(printBuffer,printFromEmpty)
 {
 	int buffer_size = 10;
