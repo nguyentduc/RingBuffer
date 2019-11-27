@@ -10,12 +10,20 @@ TEST(initBuffer,init)
 	int buffer_size = 10;
 	unsigned char buffer[SIZE];
 	
-	init_buffer( &test, buffer, 10); 
+	init_buffer( &test, buffer, buffer_size); 
 	
     EXPECT_EQ(test.head, buffer);
 	EXPECT_EQ(test.tail, buffer);
 	EXPECT_EQ(test.beginning, buffer);
 	EXPECT_EQ(test.end, buffer + buffer_size -1);
+}
+TEST(initBuffer,overSize)
+{
+	struct buffer_type test; 
+	int buffer_size = 276;
+	unsigned char buffer[SIZE];
+	
+	init_buffer( &test, buffer, buffer_size); 
 }
 
 /**************************************************************
@@ -184,6 +192,25 @@ TEST(getBufferState,Error2)
 	EXPECT_EQ(err, POINTER_ERROR);
 }
 
+TEST(getBufferState,Error3)
+{
+	int buffer_size = 10;
+	struct buffer_type test; 
+	unsigned char buffer[SIZE];
+	error_type err;
+	
+	test.beginning = buffer;
+	test.end = buffer + buffer_size - 1;
+	test.head = buffer;
+	test.tail = buffer - 1;
+
+	int buff_len = get_buffer_state(&test, &err);
+	
+	
+    EXPECT_EQ(buff_len, -1);
+	EXPECT_EQ(err, POINTER_ERROR);
+}
+
 /**************************************************************
  * Test cases for add_char_to_buffer()
  * ***********************************************************/		
@@ -268,6 +295,27 @@ TEST(addCharToBuffer,addToOK1)
 	EXPECT_EQ(test.tail, buffer);
 }
 
+TEST(addCharToBuffer,addToOK2)
+{
+	int buffer_size = 10;
+	struct buffer_type test; 
+	unsigned char buffer[SIZE];
+	unsigned char add = 'c';
+	error_type err;
+	int len;
+	
+	test.beginning = buffer;
+	test.end = buffer + buffer_size - 1;
+	test.head = buffer + 9;
+	test.tail = buffer + 8;
+	len = add_char_to_buffer(&test,add,&err);
+	
+    EXPECT_EQ(len,2);
+	EXPECT_EQ(err,OK);
+	EXPECT_EQ(test.head, buffer);
+	EXPECT_EQ(test.tail, buffer + 8);
+}
+
 TEST(addCharToBuffer,addToOKThenFull)
 {
 	int buffer_size = 10;
@@ -312,7 +360,7 @@ TEST(getCharFromBuffer,getFromEmpty)
 	EXPECT_EQ(test.tail, buffer);	
 }
 
-TEST(getCharFromBuffer,getFromOK)
+TEST(getCharFromBuffer,getFromOK1)
 {
 	int buffer_size = 10;
 	struct buffer_type test; 
@@ -335,6 +383,36 @@ TEST(getCharFromBuffer,getFromOK)
 	EXPECT_EQ(err, OK);
 	EXPECT_EQ(test.head, buffer + 4);
 	EXPECT_EQ(test.tail, buffer + 3);	
+}
+
+TEST(getCharFromBuffer,getFromOK2)
+{
+	int buffer_size = 10;
+	struct buffer_type test; 
+	unsigned char buffer[SIZE];
+	unsigned char read;
+	error_type err;
+	int i;
+	
+	test.beginning = buffer;
+	test.end = buffer + buffer_size - 1;
+	
+	test.head = buffer + 8;
+	*(test.head) = 'a';
+	test.head++;
+	*(test.head) = 'a';
+	test.head = buffer;
+	*(test.head) = 'a';
+	test.head++;		// test.head = buffer + 1
+	
+	test.tail = buffer + 9;
+	
+	read = get_char_from_buffer(&test, &err);
+	
+    EXPECT_EQ(read,'a');
+	EXPECT_EQ(err, OK);
+	EXPECT_EQ(test.head, buffer + 1);
+	EXPECT_EQ(test.tail, buffer);	
 }
 
 TEST(getCharFromBuffer,getFromFull)

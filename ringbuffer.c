@@ -6,7 +6,7 @@
 void init_buffer(struct buffer_type *b, unsigned char *buffer,  int buffer_size){
 	
 	if(buffer_size > SIZE)
-		printf("Beffer size needs to be smaller than 256");
+		printf("Buffer size needs to be smaller than 256");
 	else{
 		b->beginning = buffer;
 		b->end= buffer + buffer_size - 1;
